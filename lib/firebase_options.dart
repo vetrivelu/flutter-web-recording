@@ -53,11 +53,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBWZCnZ3ncAyyfNEKZRhSDzcQOzP3oaA6s',
-    appId: '1:905088846155:web:34db8cb69a5daddc6180ce',
-    messagingSenderId: '905088846155',
-    projectId: 'realestate-d0cd9',
-    authDomain: 'realestate-d0cd9.firebaseapp.com',
-    storageBucket: 'realestate-d0cd9.appspot.com',
+    apiKey: 'AIzaSyC3VEyi81rFGp46n74YvAIDiSMxmQG7XCY',
+    appId: '1:597058569748:web:bd07e7a789d2a284914901',
+    messagingSenderId: '597058569748',
+    projectId: 'vedanta-242a7',
+    authDomain: 'vedanta-242a7.firebaseapp.com',
+    storageBucket: 'vedanta-242a7.appspot.com',
+    measurementId: 'G-HRS8GYT9R7',
   );
 }
