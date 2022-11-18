@@ -1,10 +1,17 @@
 import 'dart:html' as html;
+import 'dart:html';
 import 'dart:js' as js;
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:video_recorder_app/firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -41,9 +48,28 @@ class _MyAppState extends State<MyApp> {
     ui.platformViewRegistry.registerViewFactory('result', (int _) => _result);
   }
 
+  Future<Uint8List> fileConverter(Blob blob) async {
+    final reader = html.FileReader();
+    reader.readAsArrayBuffer(blob);
+    await reader.onLoad.first;
+    return reader.result as Uint8List;
+  }
+
+  Future uploadFile(String uid, Blob file) async {
+    print("Inside upload file.......");
+    final path = "nachweise/$uid";
+    Uint8List fileConverted = await fileConverter(file);
+    print("File converted");
+    try {
+      FirebaseStorage.instance.ref().child(path).putData(fileConverted).then((bla) => print("sucess"));
+    } on FirebaseException catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   Future<html.MediaStream?> _openCamera() async {
-    final html.MediaStream? stream = await html.window.navigator.mediaDevices
-        ?.getUserMedia({'video': true, 'audio': true});
+    final html.MediaStream? stream = await html.window.navigator.mediaDevices?.getUserMedia({'video': true, 'audio': true});
     _preview.srcObject = stream;
     return stream;
   }
@@ -67,6 +93,8 @@ class _MyAppState extends State<MyApp> {
           track.stop();
         }
       });
+      print("Uploading blob...");
+      uploadFile('uid', blob);
     });
   }
 
